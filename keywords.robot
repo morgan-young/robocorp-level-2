@@ -2,14 +2,14 @@
 Documentation     Keywords needed to run the robotsparebin tasks
 ...
 Library           RPA.Browser.Playwright  auto_closing_level=SUITE  #timeout=30000
-Library           RPA.Excel.Files
-Library           RPA.HTTP
-Library           RPA.Tables
 Library           RPA.PDF
+Library           RPA.Desktop.Windows
+Library           RPA.Excel.Files
+Library           RPA.Tables
+Library           RPA.Robocloud.Secrets
 Library           RPA.Archive
 Library           RPA.Dialogs
-Library           RPA.Robocloud.Secrets
-Library           RPA.Desktop.Windows
+Library           RPA.HTTP
 
 *** Variables ***
 ${retries}=    10x
@@ -51,7 +51,8 @@ Complete the Form
         Run Keyword If    '${robot}[Body]' == '1'    Click    id=id-body-1
         Run Keyword If    '${robot}[Body]' == '2'    Click    id=id-body-2
         Run Keyword If    '${robot}[Body]' == '3'    Click    id=id-body-3
-        Run Keyword If    '${robot}[Body]' == '4'    Click    id=id-body-5
+        Run Keyword If    '${robot}[Body]' == '4'    Click    id=id-body-4
+        Run Keyword If    '${robot}[Body]' == '5'    Click    id=id-body-5
         Run Keyword If    '${robot}[Body]' == '6'    Click    id=id-body-6
     Fill Text    ${legs_field}    ${robot}[Legs] 
     Fill Text    id=address    ${robot}[Address]
@@ -78,6 +79,27 @@ Grab the Receipt as a PDF
     ${order_number}=    RPA.Browser.Playwright.Get Text    xpath=//div[@id="receipt"]/p[1]
     Html To Pdf        ${receipt_text}    ${CURDIR}${/}output${/}receipts${/}${order_number}.pdf
     [Return]    ${CURDIR}${/}output${/}receipts${/}${order_number}.pdf
+    
+
+Save a Screenshot
+    [Arguments]    ${order_number}
+    Take Screenshot     ${CURDIR}${/}output${/}${order_number}.png    id=robot-preview-image
+    [Return]       ${CURDIR}${/}output${/}${order_number}.png
+    
+    
+Embed the Screenshot
+    [Arguments]    ${screenshot}   ${PDF}
+    Open PDF    ${PDF}
+    Add Watermark Image To PDF    ${screenshot}    ${PDF}
+    Close PDF    ${PDF}
+    
+    
+Go Again
+    Click    id=order-another
+    
+    
+Spin Up a ZIP
+    Archive Folder With Zip  ${CURDIR}${/}output${/}receipts   ${CURDIR}${/}output${/}all_the_receipts.zip
 # -
 
 

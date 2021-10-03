@@ -23,7 +23,10 @@ Submit the Orders
       Check the Robot
       Submit and Make Sure it Works
       ${PDF}=    Grab the Receipt as a PDF    ${robot}[Order number]
+      ${screenshot}=    Save a Screenshot    ${robot}[Order number]
+      Embed the Screenshot    ${screenshot}    ${PDF}
+      Go Again
     END
-   
+    Spin Up a ZIP
     
     
